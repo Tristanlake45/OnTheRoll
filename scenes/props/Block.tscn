@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://fe6mkbuuvgs4"]
+
+[ext_resource type="Script" uid="uid://de4y1vks32bqo" path="res://block.gd" id="1_2wby2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hfsdp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2wby2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ab6iy"]
+size = Vector3(1.4562988, 1.2578125, 1.3153076)
+
+[node name="CharacterBody3DEnemy" type="CharacterBody3D" unique_id=631851840]
+script = ExtResource("1_2wby2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1488676451]
+mesh = SubResource("BoxMesh_hfsdp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=432387821]
+shape = SubResource("BoxShape3D_2wby2")
+
+[node name="SquashZone" type="Area3D" parent="." unique_id=254082965]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SquashZone" unique_id=1704025829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.019386113, 0.1169219, -0.028866291)
+shape = SubResource("BoxShape3D_ab6iy")
+
+[node name="HurtZone" type="Area3D" parent="." unique_id=1034708402]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtZone" unique_id=1646533408]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, -0.029)
+shape = SubResource("BoxShape3D_ab6iy")
+
+[connection signal="body_entered" from="SquashZone" to="." method="_on_squash_zone_body_entered"]
+[connection signal="body_entered" from="HurtZone" to="." method="_on_hurt_zone_body_entered"]

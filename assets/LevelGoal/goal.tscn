@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dx2pajla5j62q"]
+
+[ext_resource type="Script" uid="uid://ntq0u3jhfddf" path="res://goal.gd" id="1_jyxv4"]
+[ext_resource type="ArrayMesh" uid="uid://dhkvpx5r0pkp6" path="res://assets/imported_platformer/stage/meshes/trunk_floor.res" id="2_6h5fe"]
+[ext_resource type="ArrayMesh" uid="uid://b3dsi1y878r7b" path="res://assets/imported_platformer/stage/meshes/tree_top.res" id="3_bn6am"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rrpeu"]
+
+[node name="Goal" type="Area3D" unique_id=1757859633]
+script = ExtResource("1_jyxv4")
+
+[node name="Tree" type="MeshInstance3D" parent="." unique_id=1317356005]
+mesh = ExtResource("2_6h5fe")
+
+[node name="Leaves" type="MeshInstance3D" parent="Tree" unique_id=1820677198]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.001346, 0)
+mesh = ExtResource("3_bn6am")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1577106876]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, 0, -0.51110786, 0)
+shape = SubResource("BoxShape3D_rrpeu")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

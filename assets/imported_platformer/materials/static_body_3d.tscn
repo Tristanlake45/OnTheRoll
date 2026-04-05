@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://5dmbpllk4hf5"]
+
+[ext_resource type="Script" uid="uid://djp8inw3gduu2" path="res://static_body_3d.gd" id="1_wxi4j"]
+[ext_resource type="ArrayMesh" uid="uid://ba7lhk44sk366" path="res://assets/imported_platformer/stage/meshes/floor.res" id="2_ukwkc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8fa11"]
+size = Vector3(1.9967041, 0.0435791, 1.9978256)
+
+[node name="StaticBody3D" type="StaticBody3D" unique_id=1166734240]
+script = ExtResource("1_wxi4j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=693683296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9951829, 0)
+mesh = ExtResource("2_ukwkc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1076882610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31726265e-05, 0.016296387, 0.0007362366)
+shape = SubResource("BoxShape3D_8fa11")
