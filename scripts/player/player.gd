@@ -12,6 +12,8 @@ const DAMAGE_KNOCKBACK_X = 4.0
 const DAMAGE_BOUNCE_Y = 4.0
 const INVINCIBILITY_TIME = 1.0
 
+const FALL_DEATH_Y = -15.0
+
 @onready var anim: AnimatedSprite3D = $AnimatedSprite3D
 
 var jumps_left = MAX_JUMPS
@@ -19,11 +21,14 @@ var health = MAX_HEALTH
 var coins = 0
 var is_invincible = false
 var is_dead = false
+
 var anim_start_position: Vector3
+var respawn_position: Vector3
 
 func _ready() -> void:
 	add_to_group("player")
 	anim_start_position = anim.position
+	respawn_position = global_position
 	update_health_ui()
 	update_coin_ui()
 
@@ -31,9 +36,10 @@ func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
 
-	# Reset jumps when grounded
+	# Save last safe platform position
 	if is_on_floor():
 		jumps_left = MAX_JUMPS
+		respawn_position = global_position
 
 	# Gravity
 	if not is_on_floor():
@@ -48,7 +54,6 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY
 		else:
 			velocity.y = DOUBLE_JUMP_VELOCITY
-
 		jumps_left -= 1
 
 	# Left / right movement
@@ -59,11 +64,16 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
-	# Lock to one plane
+	# Lock to 2D plane
 	velocity.z = 0
 
 	move_and_slide()
 	global_position.z = 0
+
+	# 🔥 FALL CHECK
+	if global_position.y < FALL_DEATH_Y:
+		handle_fall()
+		return
 
 	update_animation(direction)
 
@@ -71,25 +81,21 @@ func update_animation(direction: float) -> void:
 	if is_dead:
 		return
 
-	# In air -> play Idle
 	if not is_on_floor():
 		if anim.animation != "Idle":
 			anim.play("Idle")
 		anim.speed_scale = 1.0
 		return
 
-	# Idle on ground
 	if direction == 0:
 		if anim.animation != "Idle":
 			anim.play("Idle")
 		anim.speed_scale = 1.0
 		return
 
-	# Rolling on ground
 	if anim.animation != "Roll":
 		anim.play("Roll")
 
-	# Right = normal roll, left = reverse roll
 	if direction > 0:
 		anim.speed_scale = 3.0
 	else:
@@ -100,7 +106,6 @@ func bounce_after_squash() -> void:
 
 func collect_coin() -> void:
 	coins += 1
-	print("Coins:", coins)
 	update_coin_ui()
 
 func take_damage(enemy_x: float) -> void:
@@ -118,13 +123,36 @@ func take_damage(enemy_x: float) -> void:
 
 	is_invincible = true
 
-	# Knock player away from enemy
 	if global_position.x < enemy_x:
 		velocity.x = -DAMAGE_KNOCKBACK_X
 	else:
 		velocity.x = DAMAGE_KNOCKBACK_X
 
 	velocity.y = DAMAGE_BOUNCE_Y
+	start_invincibility_timer()
+
+# 🔥 FALL HANDLER (NEW)
+func handle_fall() -> void:
+	if is_invincible or is_dead:
+		return
+
+	health -= 1
+	update_health_ui()
+
+	print("Player fell! Health:", health)
+
+	if health <= 0:
+		die()
+		return
+
+	is_invincible = true
+
+	# Respawn slightly above last platform
+	global_position = respawn_position + Vector3(0, 1.0, 0)
+	global_position.z = 0
+
+	velocity = Vector3.ZERO
+	jumps_left = MAX_JUMPS
 
 	start_invincibility_timer()
 
@@ -148,10 +176,7 @@ func die() -> void:
 	var tween = create_tween()
 	tween.set_parallel(true)
 
-	# Quick, rigid cartoon squash
 	tween.tween_property(anim, "scale", Vector3(1.45, 0.45, 1.0), 0.12)
-
-	# Small downward snap for impact
 	tween.tween_property(anim, "position", anim_start_position + Vector3(0, -0.12, 0), 0.12)
 
 	await tween.finished
