@@ -25,7 +25,7 @@ sky = SubResource("Sky_180ig")
 [sub_resource type="BoxShape3D" id="BoxShape3D_1i4ox"]
 size = Vector3(1.9801025, 1, 2.0345154)
 
-[node name="Level1Scene" type="Node3D" unique_id=1234421561]
+[node name="Level2Scene" type="Node3D" unique_id=1234421561]
 
 [node name="CharacterBody3D2" parent="." unique_id=847309077 instance=ExtResource("1_jhv4o")]
 transform = Transform3D(-0.62503153, 0.57088375, 0.53237885, 0.22570093, -0.5207142, 0.8233564, 0.74725807, 0.6347821, 0.19661383, 0, 0.5240351, 0)
@@ -69,10 +69,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.321016, 4.0577, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.473808, 4.0542717, 0)
 
 [node name="Coin2" parent="." unique_id=1416602736 instance=ExtResource("5_n5kqm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.645544, 2.497562, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2386227, 0.22084427, 0.7862978)
 
 [node name="Coin" parent="." unique_id=1983326524 instance=ExtResource("5_n5kqm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4327226, 2.5309021, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1167483, 0.3175645, 0.7909689)
 
 [node name="StaticBody3D4" type="StaticBody3D" parent="." unique_id=1675888083]
 transform = Transform3D(5, 0, 0, 0, 0.2, 0, 0, 0, 3.24, -0.9172735, -0.17550859, -0.15967143)

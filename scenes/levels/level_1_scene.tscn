@@ -112,6 +112,7 @@ mesh = ExtResource("8_ks3pt")
 
 [node name="Goal" parent="." unique_id=1757859633 instance=ExtResource("7_o6oqw")]
 transform = Transform3D(1, -0.00010138799, -3.8896902e-05, 0.000101290476, 0.9999969, -0.002475987, 3.9150127e-05, 0.0024759828, 0.9999969, 74.94029, 1.1265206, 0)
+next_level_scene = "uid://hv7b3idrim2x"
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=582176063]
 transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 19.485853, 3.6271253, -0.4209222)
