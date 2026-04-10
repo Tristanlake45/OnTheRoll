@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://lgh65qf570lx"]
 
+[ext_resource type="Script" uid="uid://b54g52ecixpot" path="res://scenes/levels/level_1_scene.gd" id="1_644da"]
 [ext_resource type="PackedScene" uid="uid://dh80m3s0cw631" path="res://scenes/player/PlayerModel.tscn" id="2_644da"]
 [ext_resource type="Texture2D" uid="uid://qdur4kpvvtdg" path="res://assets/imported_platformer/stage/panorama.webp" id="3_mgap2"]
 [ext_resource type="PackedScene" uid="uid://o5q0hy6cg6nt" path="res://assets/imported_platformer/enemy/enemy.tscn" id="4_pioyl"]
@@ -26,6 +27,7 @@ sky = SubResource("Sky_180ig")
 size = Vector3(1.9801025, 1, 2.0345154)
 
 [node name="Level1Scene" type="Node3D" unique_id=1234421561]
+script = ExtResource("1_644da")
 
 [node name="CharacterBody3D2" parent="." unique_id=847309077 instance=ExtResource("2_644da")]
 transform = Transform3D(-0.62503153, 0.57088375, 0.53237885, 0.22570093, -0.5207142, 0.8233564, 0.74725807, 0.6347821, 0.19661383, 0, 0.5240351, 0)

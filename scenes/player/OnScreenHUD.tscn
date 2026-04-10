@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://3iuwod2oufrh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hm40s"]
+
+[node name="OnScreenHUD" type="CanvasLayer" unique_id=1061080715]
+
+[node name="Control" type="Control" parent="." unique_id=2120295592]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="LifeCounter" type="Label" parent="Control" unique_id=1612637647]
+layout_mode = 0
+offset_left = 1029.0
+offset_top = 12.0
+offset_right = 1126.0
+offset_bottom = 78.0
+text = "Lifes: 3"
+
+[node name="CoinCounter" type="Label" parent="Control" unique_id=455793084]
+layout_mode = 0
+offset_left = 870.0
+offset_top = 11.0
+offset_right = 977.0
+offset_bottom = 77.0
+text = "Coins: 0"
+label_settings = SubResource("LabelSettings_hm40s")

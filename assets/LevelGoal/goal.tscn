@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ntq0u3jhfddf" path="res://goal.gd" id="1_jyxv4"]
 [ext_resource type="ArrayMesh" uid="uid://dhkvpx5r0pkp6" path="res://assets/imported_platformer/stage/meshes/trunk_floor.res" id="2_6h5fe"]
 [ext_resource type="ArrayMesh" uid="uid://b3dsi1y878r7b" path="res://assets/imported_platformer/stage/meshes/tree_top.res" id="3_bn6am"]
+[ext_resource type="AudioStream" uid="uid://d26n61pxu58xi" path="res://assets/imported_platformer/sounds/LevelComplete.wav" id="4_6h5fe"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rrpeu"]
 
@@ -19,5 +20,8 @@ mesh = ExtResource("3_bn6am")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1577106876]
 transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 1, 0, -0.51110786, 0)
 shape = SubResource("BoxShape3D_rrpeu")
+
+[node name="LevelComplete" type="AudioStreamPlayer" parent="." unique_id=1067488332]
+stream = ExtResource("4_6h5fe")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

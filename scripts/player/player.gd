@@ -11,10 +11,22 @@ const MAX_HEALTH = 3
 const DAMAGE_KNOCKBACK_X = 4.0
 const DAMAGE_BOUNCE_Y = 4.0
 const INVINCIBILITY_TIME = 1.0
+const FLASH_INTERVAL = 0.08
 
 const FALL_DEATH_Y = -15.0
 
 @onready var anim: AnimatedSprite3D = $AnimatedSprite3D
+
+@onready var coin_sound: AudioStreamPlayer = $Coin
+@onready var jump_sound: AudioStreamPlayer = $Jump
+@onready var double_jump_sound: AudioStreamPlayer = $DoubleJump
+@onready var fall_death_sound: AudioStreamPlayer = $FallDeath
+@onready var level_complete_sound: AudioStreamPlayer = $LevelComplete
+@onready var death_sound: AudioStreamPlayer = $Death
+@onready var respawn_sound: AudioStreamPlayer = $Respawn
+@onready var roll_sound: AudioStreamPlayer = $Roll
+@onready var hit_sound: AudioStreamPlayer = $Hit
+@onready var spawn_sound: AudioStreamPlayer = $Spawn
 
 var jumps_left = MAX_JUMPS
 var health = MAX_HEALTH
@@ -32,8 +44,12 @@ func _ready() -> void:
 	update_health_ui()
 	update_coin_ui()
 
+	# Play spawn sound when level starts
+	play_sound(spawn_sound)
+
 func _physics_process(delta: float) -> void:
 	if is_dead:
+		stop_roll_sound()
 		return
 
 	# Save last safe platform position
@@ -52,8 +68,11 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_accept") and jumps_left > 0:
 		if jumps_left == MAX_JUMPS:
 			velocity.y = JUMP_VELOCITY
+			play_sound(jump_sound)
 		else:
 			velocity.y = DOUBLE_JUMP_VELOCITY
+			play_sound(double_jump_sound)
+
 		jumps_left -= 1
 
 	# Left / right movement
@@ -70,12 +89,13 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	global_position.z = 0
 
-	# 🔥 FALL CHECK
+	# Fell off map
 	if global_position.y < FALL_DEATH_Y:
 		handle_fall()
 		return
 
 	update_animation(direction)
+	update_roll_sound(direction)
 
 func update_animation(direction: float) -> void:
 	if is_dead:
@@ -90,7 +110,7 @@ func update_animation(direction: float) -> void:
 	if direction == 0:
 		if anim.animation != "Idle":
 			anim.play("Idle")
-		anim.speed_scale = 1.0
+		anim.speed_scale = 2.5
 		return
 
 	if anim.animation != "Roll":
@@ -101,12 +121,34 @@ func update_animation(direction: float) -> void:
 	else:
 		anim.speed_scale = -3.0
 
+func update_roll_sound(direction: float) -> void:
+	if is_dead:
+		stop_roll_sound()
+		return
+
+	if is_on_floor() and direction != 0:
+		if not roll_sound.playing:
+			roll_sound.play()
+	else:
+		stop_roll_sound()
+
+func stop_roll_sound() -> void:
+	if roll_sound.playing:
+		roll_sound.stop()
+
+func play_sound(player: AudioStreamPlayer) -> void:
+	if player == null:
+		return
+	player.stop()
+	player.play()
+
 func bounce_after_squash() -> void:
 	velocity.y = SQUASH_BOUNCE
 
 func collect_coin() -> void:
 	coins += 1
 	update_coin_ui()
+	play_sound(coin_sound)
 
 func take_damage(enemy_x: float) -> void:
 	if is_invincible or is_dead:
@@ -117,21 +159,26 @@ func take_damage(enemy_x: float) -> void:
 
 	print("Player hit! Health:", health)
 
+	# Play hit sound only if still alive
+	if health > 0:
+		play_sound(hit_sound)
+
 	if health <= 0:
 		die()
 		return
 
 	is_invincible = true
 
+	# Bounce/knockback away from enemy
 	if global_position.x < enemy_x:
 		velocity.x = -DAMAGE_KNOCKBACK_X
 	else:
 		velocity.x = DAMAGE_KNOCKBACK_X
 
 	velocity.y = DAMAGE_BOUNCE_Y
-	start_invincibility_timer()
 
-# 🔥 FALL HANDLER (NEW)
+	start_invincibility_timer(true)
+
 func handle_fall() -> void:
 	if is_invincible or is_dead:
 		return
@@ -141,25 +188,46 @@ func handle_fall() -> void:
 
 	print("Player fell! Health:", health)
 
+	# Only play FallDeath if this fall kills the player
 	if health <= 0:
+		play_sound(fall_death_sound)
 		die()
 		return
 
 	is_invincible = true
 
-	# Respawn slightly above last platform
+	# Respawn
 	global_position = respawn_position + Vector3(0, 1.0, 0)
 	global_position.z = 0
 
 	velocity = Vector3.ZERO
 	jumps_left = MAX_JUMPS
 
-	start_invincibility_timer()
+	play_sound(respawn_sound)
+	start_invincibility_timer(false)
 
-func start_invincibility_timer() -> void:
+func start_invincibility_timer(should_flash: bool) -> void:
+	if should_flash:
+		flash_invincibility()
+
 	var timer := get_tree().create_timer(INVINCIBILITY_TIME)
 	await timer.timeout
+
 	is_invincible = false
+	anim.visible = true
+
+func flash_invincibility() -> void:
+	_flash_loop()
+
+func _flash_loop() -> void:
+	if not is_invincible or is_dead:
+		anim.visible = true
+		return
+
+	anim.visible = not anim.visible
+
+	await get_tree().create_timer(FLASH_INTERVAL).timeout
+	_flash_loop()
 
 func die() -> void:
 	if is_dead:
@@ -168,7 +236,10 @@ func die() -> void:
 	is_dead = true
 	is_invincible = true
 	velocity = Vector3.ZERO
+	stop_roll_sound()
+	play_sound(death_sound)
 
+	anim.visible = true
 	anim.stop()
 	anim.scale = Vector3(1.0, 1.0, 1.0)
 	anim.position = anim_start_position
@@ -184,12 +255,15 @@ func die() -> void:
 
 	get_tree().change_scene_to_file(get_tree().current_scene.scene_file_path)
 
+func play_level_complete_sound() -> void:
+	play_sound(level_complete_sound)
+
 func update_health_ui() -> void:
-	var ui = get_node_or_null("/root/Main/CanvasLayer/HealthLabel")
+	var ui = get_tree().current_scene.get_node_or_null("CanvasLayer/Control/LifeCounter")
 	if ui:
 		ui.text = "Hearts: " + str(health)
 
 func update_coin_ui() -> void:
-	var ui = get_node_or_null("/root/Main/CanvasLayer/CoinLabel")
+	var ui = get_tree().current_scene.get_node_or_null("OnScreenHud/Control/CoinCounter")
 	if ui:
 		ui.text = "Coins: " + str(coins)

@@ -13,6 +13,10 @@ func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		triggered = true
 
+		# 🔊 Tell player to play LevelComplete sound
+		if body.has_method("play_level_complete_sound"):
+			body.play_level_complete_sound()
+
 		play_leaves_animation()
 
 		await get_tree().create_timer(0.8).timeout

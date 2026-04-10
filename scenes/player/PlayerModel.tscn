@@ -3,6 +3,17 @@
 [ext_resource type="Script" uid="uid://cii5gjiswrxup" path="res://scripts/player/player.gd" id="1_yyoea"]
 [ext_resource type="Texture2D" uid="uid://dbpdrk6y5toyo" path="res://assets/player/MainCharIdle.png" id="2_8x4f1"]
 [ext_resource type="Texture2D" uid="uid://c53v85komfsh5" path="res://assets/player/MainCharRoll.png" id="3_4oltd"]
+[ext_resource type="AudioStream" uid="uid://brh7lfvijeaxi" path="res://assets/imported_platformer/sounds/Coin1.wav" id="4_nq13e"]
+[ext_resource type="AudioStream" uid="uid://6oc5tfl2obq6" path="res://assets/imported_platformer/sounds/Jump.wav" id="5_8oeyq"]
+[ext_resource type="AudioStream" uid="uid://d1mc5ineqj8le" path="res://assets/imported_platformer/sounds/DoubleJump.wav" id="6_wvrln"]
+[ext_resource type="AudioStream" uid="uid://bcl0swqa4l6s1" path="res://assets/imported_platformer/sounds/FallDeathChime.wav" id="7_58sjr"]
+[ext_resource type="AudioStream" uid="uid://d26n61pxu58xi" path="res://assets/imported_platformer/sounds/LevelComplete.wav" id="8_wvauq"]
+[ext_resource type="AudioStream" uid="uid://c77bl6787vu62" path="res://assets/imported_platformer/sounds/Death.wav" id="9_4q6h0"]
+[ext_resource type="AudioStream" uid="uid://r18gcvxu7akt" path="res://assets/imported_platformer/sounds/RespawnChime.wav" id="10_e0glg"]
+[ext_resource type="AudioStream" uid="uid://bhv25capiy31j" path="res://assets/imported_platformer/sounds/RollinRollinRollin.wav" id="11_8jig2"]
+[ext_resource type="AudioStream" uid="uid://dsx2chos4qyxs" path="res://assets/imported_platformer/sounds/SlightlySalty.wav" id="12_8oeyq"]
+[ext_resource type="AudioStream" uid="uid://bjj3y3ooppxne" path="res://assets/imported_platformer/sounds/SlightlyHappy.wav" id="13_wvrln"]
+[ext_resource type="PackedScene" uid="uid://3iuwod2oufrh" path="res://scenes/player/OnScreenHUD.tscn" id="14_58sjr"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jsvgc"]
 
@@ -160,7 +171,7 @@ animations = [{
 }]
 
 [node name="CharacterBody3D2" type="CharacterBody3D" unique_id=847309077]
-transform = Transform3D(-0.6250316, 0.57088387, 0.53237885, 0.22570089, -0.5207142, 0.8233564, 0.7472581, 0.6347821, 0.19661385, 0, 0, 0)
+transform = Transform3D(-1.2500631, 1.1417675, 1.0647577, 0.45140186, -1.0414284, 1.6467128, 1.4945161, 1.2695642, 0.39322767, 0, 0.276385, 0)
 script = ExtResource("1_yyoea")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=992452624]
@@ -174,3 +185,35 @@ animation = &"Roll"
 frame = 7
 frame_progress = 0.73034793
 speed_scale = 3.0
+
+[node name="Coin" type="AudioStreamPlayer" parent="." unique_id=1801707372]
+stream = ExtResource("4_nq13e")
+
+[node name="Jump" type="AudioStreamPlayer" parent="." unique_id=666810092]
+stream = ExtResource("5_8oeyq")
+
+[node name="DoubleJump" type="AudioStreamPlayer" parent="." unique_id=1622568550]
+stream = ExtResource("6_wvrln")
+
+[node name="FallDeath" type="AudioStreamPlayer" parent="." unique_id=321716568]
+stream = ExtResource("7_58sjr")
+
+[node name="LevelComplete" type="AudioStreamPlayer" parent="." unique_id=2003372398]
+stream = ExtResource("8_wvauq")
+
+[node name="Death" type="AudioStreamPlayer" parent="." unique_id=1260983810]
+stream = ExtResource("9_4q6h0")
+
+[node name="Respawn" type="AudioStreamPlayer" parent="." unique_id=1033536282]
+stream = ExtResource("10_e0glg")
+
+[node name="Roll" type="AudioStreamPlayer" parent="." unique_id=1103310225]
+stream = ExtResource("11_8jig2")
+
+[node name="Hit" type="AudioStreamPlayer" parent="." unique_id=1108412569]
+stream = ExtResource("12_8oeyq")
+
+[node name="Spawn" type="AudioStreamPlayer" parent="." unique_id=1112784300]
+stream = ExtResource("13_wvrln")
+
+[node name="OnScreenHUD" parent="." unique_id=1061080715 instance=ExtResource("14_58sjr")]
