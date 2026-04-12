@@ -112,6 +112,7 @@ mesh = ExtResource("6_556ko")
 
 [node name="Goal" parent="." unique_id=1757859633 instance=ExtResource("7_ifleb")]
 transform = Transform3D(1, -0.00010138799, -3.8896902e-05, 0.000101290476, 0.9999969, -0.002475987, 3.9150127e-05, 0.0024759828, 0.9999969, 74.94029, 1.1265206, 0)
+next_level_scene = "res://scenes/levels/level_3_scene.tscn"
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=582176063]
 transform = Transform3D(-2.9907477, 0, -0.14125776, 0, 0.19999999, 0, 0.23542967, 0, -1.7944484, 23.103132, 4.35885, -0.4209222)
