@@ -1,0 +1,234 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level_3_scene.gd" id="1_lv3sc"]
+[ext_resource type="PackedScene" uid="uid://dh80m3s0cw631" path="res://scenes/player/PlayerModel.tscn" id="2_plyr3"]
+[ext_resource type="Texture2D" uid="uid://qdur4kpvvtdg" path="res://assets/imported_platformer/stage/panorama.webp" id="3_sky3"]
+[ext_resource type="PackedScene" uid="uid://o5q0hy6cg6nt" path="res://assets/imported_platformer/enemy/enemy.tscn" id="4_enm3"]
+[ext_resource type="Script" uid="uid://b4peembqvo3ah" path="res://scripts/camera/follow_camera.gd" id="5_cam3"]
+[ext_resource type="PackedScene" uid="uid://dfxo2jwbj4aeh" path="res://assets/imported_platformer/coin/coin.tscn" id="6_coin3"]
+[ext_resource type="PackedScene" uid="uid://dx2pajla5j62q" path="res://assets/LevelGoal/goal.tscn" id="7_goal3"]
+[ext_resource type="ArrayMesh" uid="uid://b3dsi1y878r7b" path="res://assets/imported_platformer/stage/meshes/tree_top.res" id="8_mesh3"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_l3sky"]
+panorama = ExtResource("3_sky3")
+
+[sub_resource type="Sky" id="Sky_l3sky"]
+sky_material = SubResource("PanoramaSkyMaterial_l3sky")
+
+[sub_resource type="Environment" id="Environment_l3env"]
+background_mode = 2
+sky = SubResource("Sky_l3sky")
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributes_l3cam"]
+
+[sub_resource type="Compositor" id="Compositor_l3cmp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l3box"]
+size = Vector3(1.9801025, 1, 2.0345154)
+
+[node name="Level3Scene" type="Node3D"]
+script = ExtResource("1_lv3sc")
+
+;; ── Player ──────────────────────────────────────────────────────────────────
+[node name="CharacterBody3D2" parent="." instance=ExtResource("2_plyr3")]
+transform = Transform3D(-0.62503153, 0.57088375, 0.53237885, 0.22570093, -0.5207142, 0.8233564, 0.74725807, 0.6347821, 0.19661383, 0, 0.524, 0)
+
+;; ── Environment ─────────────────────────────────────────────────────────────
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_l3env")
+camera_attributes = SubResource("CameraAttributes_l3cam")
+compositor = SubResource("Compositor_l3cmp")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.47465667, -0.7008132, 0.5325054, 0, 0.60500216, 0.7962238, -0.88017106, -0.37793297, 0.28716832, 2.524, 9.514, 1.77)
+
+;; ── Camera ──────────────────────────────────────────────────────────────────
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.9988155, 0, -0.048658013, 0, 1, 0, 0.048658013, 0, 0.9988155, 0.057, 0.607, 5.036)
+script = ExtResource("5_cam3")
+target_path = NodePath("../CharacterBody3D2")
+y_offset = 0.3
+z_position = 5.0
+
+[node name="Area3D" type="Area3D" parent="."]
+
+;; ── Platform 1 – Starting area (wide) ──────────────────────────────────────
+[node name="StaticBody3D_Start" type="StaticBody3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 0.2, 0, 0, 0, 3.24, -0.917, -0.176, -0.16)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Start"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.408, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Start"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 2 – Low step up ────────────────────────────────────────────────
+[node name="StaticBody3D_Plat2" type="StaticBody3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 8.5, 0.5, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.478, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 3 – Mid climb ──────────────────────────────────────────────────
+[node name="StaticBody3D_Plat3" type="StaticBody3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 16, 1.8, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.478, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 4 – High platform ──────────────────────────────────────────────
+[node name="StaticBody3D_Plat4" type="StaticBody3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 24, 3.5, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 5 – Drop down ──────────────────────────────────────────────────
+[node name="StaticBody3D_Plat5" type="StaticBody3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 32, 2.0, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 6 – Rising back up ─────────────────────────────────────────────
+[node name="StaticBody3D_Plat6" type="StaticBody3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 40, 3.5, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 7 – High narrow (hardest jump) ─────────────────────────────────
+[node name="StaticBody3D_Plat7" type="StaticBody3D" parent="."]
+transform = Transform3D(1.5, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 47, 5.0, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 8 – Wide landing ───────────────────────────────────────────────
+[node name="StaticBody3D_Plat8" type="StaticBody3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 55, 2.5, -0.15)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 9 – Final approach ─────────────────────────────────────────────
+[node name="StaticBody3D_Plat9" type="StaticBody3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 65, 1.0, -0.13)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_Plat9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_Plat9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Platform 10 – Goal platform ─────────────────────────────────────────────
+[node name="StaticBody3D_GoalPlat" type="StaticBody3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 1.8, 73.6, -0.29, -0.13)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D_GoalPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0095, 1.472, 0.053)
+shape = SubResource("BoxShape3D_l3box")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D_GoalPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.105, 0)
+mesh = ExtResource("8_mesh3")
+
+;; ── Enemies ─────────────────────────────────────────────────────────────────
+[node name="Enemy1" parent="." instance=ExtResource("4_enm3")]
+transform = Transform3D(0.058226135, 0, -0.9983034, 0, 1, 0, 0.9983034, 0, 0.058226135, 16, 2.3, -0.27)
+
+[node name="Enemy2" parent="." instance=ExtResource("4_enm3")]
+transform = Transform3D(0.03319, 0, -0.999449, 0, 1, 0, 0.999449, 0, 0.03319, 32, 2.5, -0.44)
+
+[node name="Enemy3" parent="." instance=ExtResource("4_enm3")]
+transform = Transform3D(0.058226135, 0, -0.9983034, 0, 1, 0, 0.9983034, 0, 0.058226135, 47, 5.5, -0.27)
+
+[node name="Enemy4" parent="." instance=ExtResource("4_enm3")]
+transform = Transform3D(0.058226135, 0, -0.9983034, 0, 1, 0, 0.9983034, 0, 0.058226135, 55, 3.0, -0.27)
+
+[node name="Enemy5" parent="." instance=ExtResource("4_enm3")]
+transform = Transform3D(0.03319, 0, -0.999449, 0, 1, 0, 0.999449, 0, 0.03319, 68, 1.5, -0.44)
+
+;; ── Coins ───────────────────────────────────────────────────────────────────
+[node name="Coin1" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 0.8, 0)
+
+[node name="Coin2" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 1.5, 0)
+
+[node name="Coin3" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 2.0, 0)
+
+[node name="Coin4" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 3.0, 0)
+
+[node name="Coin5" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.0, 3.5, 0)
+
+[node name="Coin6" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, 3.0, 0)
+
+[node name="Coin7" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.5, 4.5, 0)
+
+[node name="Coin8" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51.0, 4.0, 0)
+
+[node name="Coin9" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60.0, 2.0, 0)
+
+[node name="Coin10" parent="." instance=ExtResource("6_coin3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70.0, 0.5, 0)
+
+;; ── Goal (end of level) ─────────────────────────────────────────────────────
+[node name="Goal" parent="." instance=ExtResource("7_goal3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.0, 1.13, 0)
